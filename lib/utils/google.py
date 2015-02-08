@@ -159,3 +159,17 @@ class Google(object):
             retVal = [urllib.unquote(match.group(1)) for match in re.finditer(DUCKDUCKGO_REGEX, page, re.I | re.S)]
 
         return retVal
+    def searchPages(self, start=1, end=10, filename=None):
+        """ 
+        This method performs the effective search on Google providing
+        the google dork and the Google session cookie
+        Specify the start page to the end of the page
+        """
+        if end < start: end = start
+        if filename is None:
+            filename = str(int(time.time())) + "_links.txt"
+        links = []
+        for pageNum in range(start, end+1):
+            conf.googlePage = pageNum
+            links.extend(self.search(self, True))
+        open(filename, "w").write("\n".join(links))
